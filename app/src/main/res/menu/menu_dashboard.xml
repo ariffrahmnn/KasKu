@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_statistics"
+        android:title="Statistik"
+        android:icon="@drawable/ic_chart"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_reset"
+        android:title="Reset Semua Data"
+        android:icon="@drawable/ic_delete_all"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_export_pdf"
+        android:title="Export PDF"
+        android:icon="@drawable/ic_pdf"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_settings"
+        android:title="Pengaturan"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="never" />
+
+</menu>

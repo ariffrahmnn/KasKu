@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">KasKu</string>
+
+    <!-- Login -->
+    <string name="app_logo">Logo Aplikasi</string>
+    <string name="login_subtitle">Kelola keuangan Anda dengan mudah</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login_button">Masuk</string>
+    <string name="demo_credentials">Demo: admin / admin123</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Beranda</string>
+    <string name="total_balance">Total Saldo</string>
+    <string name="income">Pemasukan</string>
+    <string name="expense">Pengeluaran</string>
+    <string name="transaction_history">Riwayat Transaksi</string>
+    <string name="add_transaction">Tambah Transaksi</string>
+    <string name="no_transaction">Belum ada transaksi</string>
+    <string name="no_transaction_message">Belum ada riwayat transaksi.\nTambahkan transaksi pertama Anda!</string>
+
+    <!-- Add Transaction -->
+    <string name="add_transaction_title">Tambah Transaksi</string>
+    <string name="transaction_type">Jenis Transaksi</string>
+    <string name="amount">Nominal</string>
+    <string name="description">Keterangan</string>
+    <string name="date">Tanggal</string>
+    <string name="save_transaction">Simpan Transaksi</string>
+
+    <!-- Common -->
+    <string name="save">Simpan</string>
+    <string name="cancel">Batal</string>
+    <string name="delete">Hapus</string>
+    <string name="edit">Edit</string>
+    <string name="back">Kembali</string>
+    <string name="reset_all_data">Reset Semua Data</string>
+    <string name="reset_confirmation_title">Konfirmasi Reset</string>
+    <string name="reset_confirmation_message">Apakah Anda yakin ingin menghapus SEMUA data transaksi? Tindakan ini tidak dapat dibatalkan!</string>
+    <string name="reset_success">Semua data berhasil dihapus</string>
+    <string name="reset_cancel">Batal</string>
+    <string name="yes">Ya, Hapus</string>
+</resources>

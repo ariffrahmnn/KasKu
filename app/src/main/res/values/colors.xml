@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light Theme Colors -->
+    <color name="primary">#6366F1</color>
+    <color name="primary_dark">#4F46E5</color>
+    <color name="primary_light">#A5B4FC</color>
+
+    <!-- Dark Theme Colors -->
+    <color name="primary_dark_theme">#818CF8</color>
+    <color name="background_dark">#1F2937</color>
+    <color name="card_background_dark">#374151</color>
+    <color name="text_primary_dark">#F9FAFB</color>
+    <color name="text_secondary_dark">#D1D5DB</color>
+
+    <!-- Accent Colors -->
+    <color name="accent">#EC4899</color>
+
+    <!-- Income & Expense Colors -->
+    <color name="income">#10B981</color>
+    <color name="income_light">#D1FAE5</color>
+    <color name="expense">#EF4444</color>
+    <color name="expense_light">#FEE2E2</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#1F2937</color>
+    <color name="text_secondary">#6B7280</color>
+
+    <!-- Background Colors -->
+    <color name="background">#F9FAFB</color>
+    <color name="background_login">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+
+    <!-- Basic Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Status Colors -->
+    <color name="success">#10B981</color>
+    <color name="warning">#F59E0B</color>
+    <color name="error">#EF4444</color>
+    <color name="info">#3B82F6</color>
+</resources>
