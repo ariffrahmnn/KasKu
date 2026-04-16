@@ -117,18 +117,4 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Info Kredensial Demo -->
-    <TextView
-        android:id="@+id/tvDemoInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/demo_credentials"
-        android:textSize="12sp"
-        android:textColor="@color/text_secondary"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardLogin" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
