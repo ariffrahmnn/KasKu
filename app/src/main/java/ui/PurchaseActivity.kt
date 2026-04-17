@@ -35,8 +35,15 @@ class PurchaseActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
+    private var selectedProductId: Int = 1
+
     private fun setupViewModel() {
         viewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
+
+        // Setup Spinner Unit
+        val units = arrayOf("Pcs", "Box", "Lusin", "Kg", "Gram")
+        val unitAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, units)
+        binding.spinnerUnit.setAdapter(unitAdapter)
 
         // Observe products for AutoComplete suggestions
         lifecycleScope.launch {
@@ -48,12 +55,15 @@ class PurchaseActivity : AppCompatActivity() {
                 )
                 binding.etProductName.setAdapter(adapter)
 
-                // Set default purchase price if product matches
-                binding.etProductName.setOnItemClickListener { _, _, position, _ ->
-                    val selectedName = adapter.getItem(position)
+                binding.etProductName.setOnItemClickListener { _, _, _, _ ->
+                    val selectedName = binding.etProductName.text.toString()
                     val product = products.find { it.name == selectedName }
                     product?.let {
-                        binding.etPrice.setText(it.purchasePrice.toString())
+                        selectedProductId = it.id
+                        binding.etCategory.setText(it.category)
+                        binding.spinnerUnit.setText(it.unit, false)
+                        binding.etPurchasePrice.setText(it.purchasePrice.toString())
+                        binding.etSellingPrice.setText(it.sellingPrice.toString())
                     }
                 }
             }
@@ -70,39 +80,45 @@ class PurchaseActivity : AppCompatActivity() {
         val invoice = binding.etInvoice.text.toString().trim()
         val supplier = binding.etSupplier.text.toString().trim()
         val productName = binding.etProductName.text.toString().trim()
+        val category = binding.etCategory.text.toString().trim()
+        val unit = binding.spinnerUnit.text.toString().trim()
         val qtyText = binding.etQuantity.text.toString().trim()
-        val priceText = binding.etPrice.text.toString().trim()
+        val purchasePriceText = binding.etPurchasePrice.text.toString().trim()
+        val sellingPriceText = binding.etSellingPrice.text.toString().trim()
         val extraCostText = binding.etExtraCost.text.toString().trim()
-        val status = if (binding.rbLunas.isChecked) "Lunas" else "Hutang"
 
-        if (invoice.isEmpty() || supplier.isEmpty() || productName.isEmpty() || qtyText.isEmpty() || priceText.isEmpty()) {
-            Toast.makeText(this, "Mohon lengkapi data", Toast.LENGTH_SHORT).show()
+        if (invoice.isEmpty() || supplier.isEmpty() || productName.isEmpty() || 
+            category.isEmpty() || qtyText.isEmpty() || purchasePriceText.isEmpty() || sellingPriceText.isEmpty()) {
+            Toast.makeText(this, "Mohon lengkapi semua data produk", Toast.LENGTH_SHORT).show()
             return
         }
 
         val qty = qtyText.toIntOrNull() ?: 0
-        val price = priceText.toDoubleOrNull() ?: 0.0
+        val purchasePrice = purchasePriceText.toDoubleOrNull() ?: 0.0
+        val sellingPrice = sellingPriceText.toDoubleOrNull() ?: 0.0
         val extraCost = extraCostText.toDoubleOrNull() ?: 0.0
 
-        if (qty <= 0 || price <= 0) {
-            Toast.makeText(this, "Jumlah dan Harga harus lebih dari 0", Toast.LENGTH_SHORT).show()
+        if (qty <= 0) {
+            Toast.makeText(this, "Jumlah harus lebih dari 0", Toast.LENGTH_SHORT).show()
             return
         }
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val currentDate = dateFormat.format(Date())
 
-        // Gunakan ID default 1 karena tidak ada menu manajemen produk
         val purchase = Purchase(
             invoiceNumber = invoice,
             purchaseDate = currentDate,
             supplierName = supplier,
-            productId = 1,
+            productId = selectedProductId,
             productName = productName,
+            category = category,
             quantity = qty,
-            pricePerUnit = price,
+            unit = unit,
+            pricePerUnit = purchasePrice,
+            sellingPrice = sellingPrice,
             extraCost = extraCost,
-            paymentStatus = status,
+            paymentStatus = "Lunas", // Selalu lunas sesuai request
             timestamp = System.currentTimeMillis()
         )
 

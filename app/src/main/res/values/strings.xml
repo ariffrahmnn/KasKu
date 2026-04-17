@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Name -->
-    <string name="app_name">KasKu</string>
+    <string name="app_name">MyStore</string>
 
     <!-- Login -->
     <string name="app_logo">Logo Aplikasi</string>
-    <string name="login_subtitle">Kelola keuangan Anda dengan mudah</string>
+    <string name="login_subtitle">Solusi untuk mengelola catatan inventaris anda</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login_button">Masuk</string>
-    <string name="demo_credentials">Demo: admin / admin123</string>
 
     <!-- Dashboard -->
     <string name="dashboard_title">Beranda</string>

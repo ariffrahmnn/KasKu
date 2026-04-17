@@ -34,10 +34,12 @@ class SalesActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
+    private var selectedProductId: Int = 1 // Default ke 1 (Produk Umum)
+    private var availableStock: Int = 0
+
     private fun setupViewModel() {
         viewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
         
-        // Observe products for AutoComplete suggestions
         lifecycleScope.launch {
             viewModel.allProducts.collectLatest { products ->
                 val adapter = ArrayAdapter(
@@ -47,15 +49,34 @@ class SalesActivity : AppCompatActivity() {
                 )
                 binding.etProductName.setAdapter(adapter)
                 
-                // Set default price if product matches
-                binding.etProductName.setOnItemClickListener { _, _, position, _ ->
-                    val selectedName = adapter.getItem(position)
-                    val product = products.find { it.name == selectedName }
-                    product?.let {
-                        binding.etPrice.setText(it.sellingPrice.toString())
+                binding.etProductName.setOnItemClickListener { _, _, _, _ ->
+                    updateProductDetails(products)
+                }
+
+                // Tambahkan pengecekan saat fokus hilang (user selesai mengetik)
+                binding.etProductName.setOnFocusChangeListener { _, hasFocus ->
+                    if (!hasFocus) {
+                        updateProductDetails(products)
                     }
                 }
             }
+        }
+    }
+
+    private fun updateProductDetails(products: List<com.example.kasku.data.entity.Product>) {
+        val selectedName = binding.etProductName.text.toString().trim()
+        val product = products.find { it.name.equals(selectedName, ignoreCase = true) }
+        product?.let {
+            selectedProductId = it.id
+            availableStock = it.stock
+            binding.etPrice.setText(it.sellingPrice.toString())
+            binding.tvStockInfo.text = "Stok tersedia: ${it.stock} ${it.unit}"
+            binding.tvStockInfo.visibility = android.view.View.VISIBLE
+        } ?: run {
+            // Jika tidak ditemukan di database, anggap produk umum (ID 1)
+            selectedProductId = 1
+            availableStock = 999999 
+            binding.tvStockInfo.visibility = android.view.View.GONE
         }
     }
 
@@ -89,10 +110,15 @@ class SalesActivity : AppCompatActivity() {
             return
         }
 
-        // Gunakan ID default 1 karena tidak ada menu manajemen produk
+        // Cek stok (jika bukan produk umum ID 1)
+        if (selectedProductId != 1 && qty > availableStock) {
+            Toast.makeText(this, "Stok tidak mencukupi! Tersedia: $availableStock", Toast.LENGTH_LONG).show()
+            return
+        }
+
         val sale = Sale(
             receiptNumber = receipt,
-            productId = 1,
+            productId = selectedProductId,
             productName = productName,
             quantity = qty,
             salePrice = price,

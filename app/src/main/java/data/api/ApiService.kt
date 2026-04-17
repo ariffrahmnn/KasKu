@@ -45,16 +45,30 @@ interface ApiService {
     @GET("get_products.php")
     suspend fun getAllProducts(): ProductResponse
 
+    @FormUrlEncoded
+    @POST("add_product.php")
+    suspend fun addProduct(
+        @Field("name") name: String,
+        @Field("category") category: String,
+        @Field("stock") stock: Int,
+        @Field("unit") unit: String,
+        @Field("purchase_price") purchasePrice: Double,
+        @Field("selling_price") sellingPrice: Double
+    ): TransactionResponse
+
     // --- PURCHASES (PEMBELIAN) ---
     @FormUrlEncoded
     @POST("add_purchase.php")
     suspend fun addPurchase(
         @Field("invoice_number") invoiceNumber: String,
         @Field("supplier_name") supplierName: String,
-        @Field("product_name") productName: String,
         @Field("product_id") productId: Int,
+        @Field("product_name") productName: String,
+        @Field("category") category: String,
         @Field("quantity") quantity: Int,
+        @Field("unit") unit: String,
         @Field("price_per_unit") pricePerUnit: Double,
+        @Field("selling_price") sellingPrice: Double,
         @Field("extra_cost") extraCost: Double,
         @Field("payment_status") paymentStatus: String,
         @Field("timestamp") timestamp: Long

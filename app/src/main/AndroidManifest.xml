@@ -71,6 +71,12 @@
             android:label="Tambah Penjualan"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.StockActivity"
+            android:exported="false"
+            android:label="Stok Barang"
+            android:screenOrientation="portrait" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

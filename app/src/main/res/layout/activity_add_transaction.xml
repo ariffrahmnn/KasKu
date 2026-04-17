@@ -2,31 +2,25 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".ui.AddTransactionActivity">
+    android:background="@color/background">
 
-    <!-- AppBar -->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primary"
-            app:title="@string/add_transaction_title"
+            app:title="Tambah Produk Baru"
             app:titleTextColor="@android:color/white"
             app:navigationIcon="@drawable/ic_back" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Konten Form -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,135 +30,113 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
-            <!-- Card Form -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                android:hint="Nama Produk"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etProductName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                    android:inputType="textCapWords" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Label Jenis Transaksi -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/transaction_type"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Kategori (Minuman, Makanan, dll)"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                    <!-- RadioGroup Jenis -->
-                    <RadioGroup
-                        android:id="@+id/rgType"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:hint="Stok Awal"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etStock"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <RadioButton
-                            android:id="@+id/rbIncome"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/income"
-                            android:checked="true"
-                            android:buttonTint="@color/income" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:hint="Satuan (Pcs/Box)"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                        <RadioButton
-                            android:id="@+id/rbExpense"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/expense"
-                            android:buttonTint="@color/expense" />
-
-                    </RadioGroup>
-
-                    <!-- Input Nominal -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilAmount"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etUnit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:hint="@string/amount"
-                        app:prefixText="Rp "
-                        app:startIconDrawable="@drawable/ic_money"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                        android:text="Pcs"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etAmount"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="numberDecimal"
-                            android:maxLines="1" />
-                    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Harga Beli (Modal)"
+                app:prefixText="Rp "
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                    <!-- Input Keterangan -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:hint="@string/description"
-                        app:startIconDrawable="@drawable/ic_description"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPurchasePrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etDescription"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textCapSentences"
-                            android:maxLines="3" />
-                    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Harga Jual"
+                app:prefixText="Rp "
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                    <!-- Input Tanggal -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:hint="@string/date"
-                        app:startIconDrawable="@drawable/ic_calendar"
-                        app:endIconMode="custom"
-                        app:endIconDrawable="@drawable/ic_arrow_drop_down"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSellingPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etDate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:focusable="false"
-                            android:clickable="true"
-                            android:inputType="none"
-                            android:maxLines="1" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <!-- Tombol Simpan -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnSave"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:layout_marginTop="24dp"
-                        android:text="@string/save_transaction"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="12dp"
-                        app:icon="@drawable/ic_save"
-                        app:iconGravity="textStart" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSaveProduct"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="32dp"
+                android:text="Simpan Produk Ke Stok"
+                android:textSize="16sp"
+                app:cornerRadius="12dp" />
 
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

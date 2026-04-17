@@ -1,25 +1,17 @@
 package com.example.kasku.ui
 
-import android.app.DatePickerDialog
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.kasku.data.entity.Transaction
 import com.example.kasku.databinding.ActivityAddTransactionBinding
 import com.example.kasku.viewmodel.TransactionViewModel
-import java.text.SimpleDateFormat
-import java.util.*
 
 class AddTransactionActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddTransactionBinding
     private lateinit var viewModel: TransactionViewModel
-
-    private var selectedDate: String = ""
-    private val calendar = Calendar.getInstance()
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    private val displayDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +21,6 @@ class AddTransactionActivity : AppCompatActivity() {
         setupToolbar()
         setupViewModel()
         setupListeners()
-        setDefaultDate()
     }
 
     private fun setupToolbar() {
@@ -45,120 +36,50 @@ class AddTransactionActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        // Date Picker
-        binding.etDate.setOnClickListener {
-            showDatePicker()
-        }
-
-        binding.tilDate.setEndIconOnClickListener {
-            showDatePicker()
-        }
-
-        // Tombol Simpan
-        binding.btnSave.setOnClickListener {
+        binding.btnSaveProduct.setOnClickListener {
             validateAndSave()
         }
     }
 
-    private fun setDefaultDate() {
-        selectedDate = dateFormat.format(calendar.time)
-        binding.etDate.setText(displayDateFormat.format(calendar.time))
-    }
-
-    private fun showDatePicker() {
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val datePickerDialog = DatePickerDialog(
-            this,
-            { _, selectedYear, selectedMonth, selectedDay ->
-                calendar.set(selectedYear, selectedMonth, selectedDay)
-                selectedDate = dateFormat.format(calendar.time)
-                binding.etDate.setText(displayDateFormat.format(calendar.time))
-            },
-            year,
-            month,
-            day
-        )
-
-        datePickerDialog.show()
-    }
-
     private fun validateAndSave() {
-        val amountText = binding.etAmount.text.toString().trim()
-        val description = binding.etDescription.text.toString().trim()
-        val type = if (binding.rbIncome.isChecked) "Pemasukan" else "Pengeluaran"
+        val name = binding.etProductName.text.toString().trim()
+        val category = binding.etCategory.text.toString().trim()
+        val stockText = binding.etStock.text.toString().trim()
+        val unit = binding.etUnit.text.toString().trim()
+        val purchasePriceText = binding.etPurchasePrice.text.toString().trim()
+        val sellingPriceText = binding.etSellingPrice.text.toString().trim()
 
-        // Validasi input
-        var isValid = true
-
-        if (amountText.isEmpty()) {
-            binding.tilAmount.error = "Nominal tidak boleh kosong"
-            isValid = false
-        } else {
-            val amount = amountText.toDoubleOrNull()
-            if (amount == null || amount <= 0) {
-                binding.tilAmount.error = "Nominal harus lebih dari 0"
-                isValid = false
-            } else {
-                binding.tilAmount.error = null
-            }
+        if (name.isEmpty() || category.isEmpty() || stockText.isEmpty() || 
+            unit.isEmpty() || purchasePriceText.isEmpty() || sellingPriceText.isEmpty()) {
+            Toast.makeText(this, "Harap lengkapi semua data", Toast.LENGTH_SHORT).show()
+            return
         }
 
-        if (description.isEmpty()) {
-            binding.tilDescription.error = "Keterangan tidak boleh kosong"
-            isValid = false
-        } else {
-            binding.tilDescription.error = null
-        }
+        val stock = stockText.toIntOrNull() ?: 0
+        val purchasePrice = purchasePriceText.toDoubleOrNull() ?: 0.0
+        val sellingPrice = sellingPriceText.toDoubleOrNull() ?: 0.0
 
-        if (selectedDate.isEmpty()) {
-            binding.tilDate.error = "Tanggal harus dipilih"
-            isValid = false
-        } else {
-            binding.tilDate.error = null
-        }
+        binding.btnSaveProduct.isEnabled = false
+        Toast.makeText(this, "Menyimpan produk...", Toast.LENGTH_SHORT).show()
 
-        // Jika semua validasi berhasil, simpan data
-        if (isValid) {
-            val amount = amountText.toDouble()
-
-            val transaction = Transaction(
-                type = type,
-                amount = amount,
-                description = description,
-                date = selectedDate,
-                timestamp = calendar.timeInMillis
-            )
-
-            // Disable tombol agar tidak klik dua kali
-            binding.btnSave.isEnabled = false
-            Toast.makeText(this, "Menyimpan data...", Toast.LENGTH_SHORT).show()
-
-            // Simpan ke database menggunakan ViewModel dengan callback
-            viewModel.insert(transaction) { success, message ->
-                runOnUiThread {
-                    if (success) {
-                        Toast.makeText(this, "Transaksi berhasil disimpan", Toast.LENGTH_SHORT).show()
-                        finish()
-                    } else {
-                        binding.btnSave.isEnabled = true
-                        Toast.makeText(this, "Gagal: $message", Toast.LENGTH_LONG).show()
-                    }
+        viewModel.addProduct(name, category, stock, unit, purchasePrice, sellingPrice) { success, message ->
+            runOnUiThread {
+                if (success) {
+                    Toast.makeText(this, "Produk berhasil ditambahkan ke stok", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    binding.btnSaveProduct.isEnabled = true
+                    Toast.makeText(this, "Gagal: $message", Toast.LENGTH_LONG).show()
                 }
             }
-        } else {
-            Toast.makeText(
-                this,
-                "Mohon lengkapi semua data",
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

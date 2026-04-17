@@ -9,15 +9,15 @@ data class Product(
     @SerializedName("name")
     val name: String,
     
-    @SerializedName("sku")
-    val sku: String,
-    
     @SerializedName("category")
     val category: String,
     
     @SerializedName("stock")
     val stock: Int,
-    
+
+    @SerializedName("unit")
+    val unit: String = "Pcs",
+
     @SerializedName("purchase_price")
     val purchasePrice: Double,
     

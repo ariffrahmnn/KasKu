@@ -20,13 +20,22 @@ data class Purchase(
 
     @SerializedName("product_name")
     val productName: String,
-    
+
+    @SerializedName("category")
+    val category: String,
+
     @SerializedName("quantity")
     val quantity: Int,
-    
+
+    @SerializedName("unit")
+    val unit: String = "Pcs",
+
     @SerializedName("price_per_unit")
     val pricePerUnit: Double,
-    
+
+    @SerializedName("selling_price")
+    val sellingPrice: Double,
+
     @SerializedName("extra_cost")
     val extraCost: Double,
     

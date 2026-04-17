@@ -53,13 +53,31 @@ class TransactionRepository {
     suspend fun getAllProducts(): List<Product> {
         return try {
             val response = apiService.getAllProducts()
+            android.util.Log.d("REPO_DEBUG", "Status: ${response.status}, Data Size: ${response.data.size}")
             if (response.status == "success") {
                 response.data
             } else {
                 emptyList()
             }
         } catch (e: Exception) {
+            android.util.Log.e("REPO_DEBUG", "Error fetching products: ${e.message}")
+            e.printStackTrace()
             emptyList()
+        }
+    }
+
+    suspend fun addProduct(
+        name: String,
+        category: String,
+        stock: Int,
+        unit: String,
+        purchasePrice: Double,
+        sellingPrice: Double
+    ): TransactionResponse {
+        return try {
+            apiService.addProduct(name, category, stock, unit, purchasePrice, sellingPrice)
+        } catch (e: Exception) {
+            TransactionResponse("error", e.message ?: "Unknown error")
         }
     }
 
@@ -69,10 +87,13 @@ class TransactionRepository {
             apiService.addPurchase(
                 purchase.invoiceNumber,
                 purchase.supplierName,
-                purchase.productName,
                 purchase.productId,
+                purchase.productName,
+                purchase.category,
                 purchase.quantity,
+                purchase.unit,
                 purchase.pricePerUnit,
+                purchase.sellingPrice,
                 purchase.extraCost,
                 purchase.paymentStatus,
                 purchase.timestamp

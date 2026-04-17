@@ -102,19 +102,24 @@ class PdfExporter(private val context: Context) {
                 yPos += 25f
 
                 // Cek apakah butuh halaman baru (Pagination)
-                if (yPos > 800f) {
+                if (yPos > 780f) {
                     pdfDocument.finishPage(page)
                     pageNumber++
                     pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pageNumber).create()
                     page = pdfDocument.startPage(pageInfo)
                     canvas = page.canvas
                     yPos = 50f
-
-                    // Header Tabel di halaman baru
+                    
+                    // Header Tabel di halaman baru agar tidak menimpa
                     paint.isFakeBoldText = true
                     canvas.drawText("Tanggal", 50f, yPos, paint)
                     canvas.drawText("Keterangan", 150f, yPos, paint)
-                    yPos += 15f
+                    canvas.drawText("Jenis", 380f, yPos, paint)
+                    canvas.drawText("Nominal", 480f, yPos, paint)
+                    
+                    yPos += 10f
+                    canvas.drawLine(50f, yPos, 545f, yPos, paint)
+                    yPos += 25f
                     paint.isFakeBoldText = false
                 }
 

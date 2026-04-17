@@ -84,17 +84,14 @@ class DashboardActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_statistics -> {
-                startActivity(Intent(this, SettingsActivity::class.java))
+                startActivity(Intent(this, StatisticsActivity::class.java))
                 true
             }
             R.id.action_export_pdf -> {
                 exportToPdf()
                 true
             }
-            R.id.action_reset -> {
-                showResetConfirmationDialog()
-                true
-            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -182,9 +179,9 @@ class DashboardActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Tombol Floating Action Button untuk tambah transaksi
-        binding.fabAdd.setOnClickListener {
-            val intent = Intent(this, AddTransactionActivity::class.java)
+        // Menu Stok Barang
+        binding.btnInventory.setOnClickListener {
+            val intent = Intent(this, StockActivity::class.java)
             startActivity(intent)
         }
     }

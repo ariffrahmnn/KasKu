@@ -103,6 +103,28 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun addProduct(
+        name: String,
+        category: String,
+        stock: Int,
+        unit: String,
+        purchasePrice: Double,
+        sellingPrice: Double,
+        onResult: (Boolean, String) -> Unit
+    ) = viewModelScope.launch {
+        try {
+            val response = repository.addProduct(name, category, stock, unit, purchasePrice, sellingPrice)
+            if (response.status == "success") {
+                fetchProducts()
+                onResult(true, "Produk berhasil ditambahkan")
+            } else {
+                onResult(false, response.message)
+            }
+        } catch (e: Exception) {
+            onResult(false, e.message ?: "Terjadi kesalahan")
+        }
+    }
+
     fun delete(transaction: Transaction) = viewModelScope.launch {
         val response = repository.delete(transaction.id)
         if (response.status == "success") {
