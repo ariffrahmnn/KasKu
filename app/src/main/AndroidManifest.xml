@@ -33,6 +33,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.RegisterActivity" android:exported="false" />
+
         <!-- Dashboard Activity -->
         <activity
             android:name=".ui.DashboardActivity"

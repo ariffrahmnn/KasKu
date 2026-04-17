@@ -30,6 +30,16 @@ class LoginActivity : AppCompatActivity() {
             validateAndLogin()
         }
 
+        // Navigasi ke Halaman Register
+        binding.tvToRegister.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.tvToRegister.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
+
         binding.etPassword.setOnEditorActionListener { _, _, _ ->
             validateAndLogin()
             true
