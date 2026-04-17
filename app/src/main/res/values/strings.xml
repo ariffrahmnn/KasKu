@@ -41,4 +41,21 @@
     <string name="reset_success">Semua data berhasil dihapus</string>
     <string name="reset_cancel">Batal</string>
     <string name="yes">Ya, Hapus</string>
+
+    <!-- Purchase & Sales -->
+    <string name="purchase">Pembelian</string>
+    <string name="sales">Penjualan</string>
+    <string name="invoice_number">Nomor Faktur</string>
+    <string name="supplier_name">Nama Supplier</string>
+    <string name="product_name">Nama Produk</string>
+    <string name="quantity">Jumlah</string>
+    <string name="purchase_price">Harga Beli</string>
+    <string name="selling_price_title">Harga Jual</string>
+    <string name="extra_cost">Biaya Tambahan</string>
+    <string name="payment_status">Status Pembayaran</string>
+    <string name="receipt_number">Nomor Struk</string>
+    <string name="payment_method">Metode Pembayaran</string>
+    <string name="customer_info">Data Pelanggan</string>
+    <string name="cashier_name">Nama Kasir</string>
+    <string name="select_product">Pilih Produk</string>
 </resources>

@@ -128,21 +128,26 @@ class AddTransactionActivity : AppCompatActivity() {
                 type = type,
                 amount = amount,
                 description = description,
-                date = selectedDate
+                date = selectedDate,
+                timestamp = calendar.timeInMillis
             )
 
-            // Simpan ke database menggunakan ViewModel
-            viewModel.insert(transaction)
+            // Disable tombol agar tidak klik dua kali
+            binding.btnSave.isEnabled = false
+            Toast.makeText(this, "Menyimpan data...", Toast.LENGTH_SHORT).show()
 
-            // Tampilkan pesan sukses
-            Toast.makeText(
-                this,
-                "Transaksi berhasil disimpan",
-                Toast.LENGTH_SHORT
-            ).show()
-
-            // Kembali ke Dashboard
-            finish()
+            // Simpan ke database menggunakan ViewModel dengan callback
+            viewModel.insert(transaction) { success, message ->
+                runOnUiThread {
+                    if (success) {
+                        Toast.makeText(this, "Transaksi berhasil disimpan", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        binding.btnSave.isEnabled = true
+                        Toast.makeText(this, "Gagal: $message", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
         } else {
             Toast.makeText(
                 this,

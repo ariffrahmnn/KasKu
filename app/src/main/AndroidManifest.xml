@@ -58,6 +58,19 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
+        <!-- Purchase and Sales Activities -->
+        <activity
+            android:name=".ui.PurchaseActivity"
+            android:exported="false"
+            android:label="Tambah Pembelian"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.SalesActivity"
+            android:exported="false"
+            android:label="Tambah Penjualan"
+            android:screenOrientation="portrait" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

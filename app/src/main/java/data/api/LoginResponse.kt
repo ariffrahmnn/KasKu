@@ -1,4 +1,4 @@
-package data.api
+package com.example.kasku.data.api
 
 data class LoginResponse(
     val status: String,

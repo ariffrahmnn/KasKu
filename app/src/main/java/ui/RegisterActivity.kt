@@ -3,8 +3,8 @@ package com.example.kasku.ui
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import data.api.RetrofitClient
-import data.api.LoginResponse
+import com.example.kasku.data.api.RetrofitClient
+import com.example.kasku.data.api.LoginResponse
 import com.example.kasku.databinding.ActivityRegisterBinding
 import retrofit2.Call
 import retrofit2.Callback

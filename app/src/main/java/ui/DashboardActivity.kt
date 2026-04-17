@@ -2,6 +2,8 @@ package com.example.kasku.ui
 
 import androidx.lifecycle.lifecycleScope
 import androidx.core.content.FileProvider
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -168,6 +170,18 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        // Menu Pembelian
+        binding.btnPurchase.setOnClickListener {
+            val intent = Intent(this, PurchaseActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Menu Penjualan
+        binding.btnSales.setOnClickListener {
+            val intent = Intent(this, SalesActivity::class.java)
+            startActivity(intent)
+        }
+
         // Tombol Floating Action Button untuk tambah transaksi
         binding.fabAdd.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)
@@ -176,59 +190,31 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun observeData() {
-        // Observe daftar transaksi
+        // Observe semua data sekaligus menggunakan combine agar sinkron
         lifecycleScope.launch {
-            viewModel.allTransactions.collect { transactions ->
-                adapter.submitList(transactions)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                combine(
+                    viewModel.allTransactions,
+                    viewModel.totalIncome,
+                    viewModel.totalExpense
+                ) { transactions, income, expense ->
+                    Triple(transactions, income, expense)
+                }.collect { (transactions, income, expense) ->
+                    // 1. Update List Transaksi
+                    adapter.submitList(transactions)
+                    binding.emptyState.visibility = if (transactions.isEmpty()) View.VISIBLE else View.GONE
+                    binding.rvTransactions.visibility = if (transactions.isEmpty()) View.GONE else View.VISIBLE
 
-                // Tampilkan empty state jika tidak ada transaksi
-                if (transactions.isEmpty()) {
-                    binding.emptyState.visibility = View.VISIBLE
-                    binding.rvTransactions.visibility = View.GONE
-                } else {
-                    binding.emptyState.visibility = View.GONE
-                    binding.rvTransactions.visibility = View.VISIBLE
+                    // 2. Update Card Header (Income, Expense, Balance)
+                    binding.tvTotalIncome.text = formatCurrency(income)
+                    binding.tvTotalExpense.text = formatCurrency(expense)
+                    binding.tvTotalBalance.text = formatCurrency(income - expense)
                 }
-            }
-        }
-
-        // Observe total pemasukan
-        lifecycleScope.launch {
-            viewModel.totalIncome.collect { income ->
-                val totalIncome = income ?: 0.0
-                binding.tvTotalIncome.text = formatCurrency(totalIncome)
-                updateTotalBalance()
-            }
-        }
-
-        // Observe total pengeluaran
-        lifecycleScope.launch {
-            viewModel.totalExpense.collect { expense ->
-                val totalExpense = expense ?: 0.0
-                binding.tvTotalExpense.text = formatCurrency(totalExpense)
-                updateTotalBalance()
             }
         }
     }
 
-    private fun updateTotalBalance() {
-        lifecycleScope.launch {
-            var income = 0.0
-            var expense = 0.0
-
-            viewModel.totalIncome.collect { inc ->
-                income = inc ?: 0.0
-                viewModel.totalExpense.collect { exp ->
-                    expense = exp ?: 0.0
-                    val balance = income - expense
-                    binding.tvTotalBalance.text = formatCurrency(balance)
-                    return@collect
-                }
-                return@collect
-            }
-        }
-    }
-
+    // Fungsi lama updateTotalBalance dihapus karena sudah digabung di observeData
     private fun formatCurrency(amount: Double): String {
         return currencyFormat.format(amount).replace("Rp", "Rp ")
     }
@@ -268,7 +254,8 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Data akan otomatis terupdate karena menggunakan Flow/LiveData
-        // yang bersifat observable
+        // Panggil refresh data dari server setiap kali kembali ke Dashboard
+        viewModel.fetchTransactions()
+        viewModel.fetchProducts()
     }
 }

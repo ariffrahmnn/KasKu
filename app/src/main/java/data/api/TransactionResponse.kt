@@ -1,11 +1,10 @@
 package com.example.kasku.data.api
 
-import com.example.kasku.data.entity.Product
 import com.google.gson.annotations.SerializedName
 
-data class ProductResponse(
+data class TransactionResponse(
     @SerializedName("status")
     val status: String,
-    @SerializedName("data")
-    val data: List<Product>
+    @SerializedName("message")
+    val message: String
 )
