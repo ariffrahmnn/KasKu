@@ -11,17 +11,18 @@ class TransactionRepository {
 
     private val apiService = RetrofitClient.instance
 
-    suspend fun getAllTransactions(): List<Transaction> {
+    suspend fun getAllTransactions(userId: Int): List<Transaction> {
         return try {
-            apiService.getAllTransactions()
+            apiService.getAllTransactions(userId)
         } catch (e: Exception) {
             emptyList()
         }
     }
 
-    suspend fun insert(transaction: Transaction): TransactionResponse {
+    suspend fun insert(userId: Int, transaction: Transaction): TransactionResponse {
         return try {
             apiService.addTransaction(
+                userId,
                 transaction.type,
                 transaction.amount,
                 transaction.description,
@@ -33,40 +34,30 @@ class TransactionRepository {
         }
     }
 
-    suspend fun delete(transactionId: Int): TransactionResponse {
+    suspend fun deleteAll(userId: Int): TransactionResponse {
         return try {
-            apiService.deleteTransaction(transactionId)
-        } catch (e: Exception) {
-            TransactionResponse("error", e.message ?: "Unknown error")
-        }
-    }
-
-    suspend fun deleteAll(): TransactionResponse {
-        return try {
-            apiService.deleteAllTransactions()
+            apiService.deleteAllTransactions(userId)
         } catch (e: Exception) {
             TransactionResponse("error", e.message ?: "Unknown error")
         }
     }
 
     // --- PRODUCTS ---
-    suspend fun getAllProducts(): List<Product> {
+    suspend fun getAllProducts(userId: Int): List<Product> {
         return try {
-            val response = apiService.getAllProducts()
-            android.util.Log.d("REPO_DEBUG", "Status: ${response.status}, Data Size: ${response.data.size}")
+            val response = apiService.getAllProducts(userId)
             if (response.status == "success") {
                 response.data
             } else {
                 emptyList()
             }
         } catch (e: Exception) {
-            android.util.Log.e("REPO_DEBUG", "Error fetching products: ${e.message}")
-            e.printStackTrace()
             emptyList()
         }
     }
 
     suspend fun addProduct(
+        userId: Int,
         name: String,
         category: String,
         stock: Int,
@@ -75,16 +66,17 @@ class TransactionRepository {
         sellingPrice: Double
     ): TransactionResponse {
         return try {
-            apiService.addProduct(name, category, stock, unit, purchasePrice, sellingPrice)
+            apiService.addProduct(userId, name, category, stock, unit, purchasePrice, sellingPrice)
         } catch (e: Exception) {
             TransactionResponse("error", e.message ?: "Unknown error")
         }
     }
 
     // --- PURCHASES ---
-    suspend fun insertPurchase(purchase: Purchase): TransactionResponse {
+    suspend fun insertPurchase(userId: Int, purchase: Purchase): TransactionResponse {
         return try {
             apiService.addPurchase(
+                userId,
                 purchase.invoiceNumber,
                 purchase.supplierName,
                 purchase.productId,
@@ -104,9 +96,10 @@ class TransactionRepository {
     }
 
     // --- SALES ---
-    suspend fun insertSale(sale: Sale): TransactionResponse {
+    suspend fun insertSale(userId: Int, sale: Sale): TransactionResponse {
         return try {
             apiService.addSale(
+                userId,
                 sale.receiptNumber,
                 sale.productName,
                 sale.productId,

@@ -27,13 +27,16 @@ interface ApiService {
     ): Call<LoginResponse>
 
 
-    // --- TRANSACTIONS (PENGGANTI DAO) ---
+    // --- TRANSACTIONS ---
     @GET("get_transactions.php")
-    suspend fun getAllTransactions(): List<Transaction>
+    suspend fun getAllTransactions(
+        @Query("user_id") userId: Int
+    ): List<Transaction>
 
     @FormUrlEncoded
     @POST("add_transaction.php")
     suspend fun addTransaction(
+        @Field("user_id") userId: Int,
         @Field("type") type: String,
         @Field("amount") amount: Double,
         @Field("description") description: String,
@@ -43,11 +46,14 @@ interface ApiService {
 
     // --- PRODUCTS ---
     @GET("get_products.php")
-    suspend fun getAllProducts(): ProductResponse
+    suspend fun getAllProducts(
+        @Query("user_id") userId: Int
+    ): ProductResponse
 
     @FormUrlEncoded
     @POST("add_product.php")
     suspend fun addProduct(
+        @Field("user_id") userId: Int,
         @Field("name") name: String,
         @Field("category") category: String,
         @Field("stock") stock: Int,
@@ -56,10 +62,11 @@ interface ApiService {
         @Field("selling_price") sellingPrice: Double
     ): TransactionResponse
 
-    // --- PURCHASES (PEMBELIAN) ---
+    // --- PURCHASES ---
     @FormUrlEncoded
     @POST("add_purchase.php")
     suspend fun addPurchase(
+        @Field("user_id") userId: Int,
         @Field("invoice_number") invoiceNumber: String,
         @Field("supplier_name") supplierName: String,
         @Field("product_id") productId: Int,
@@ -74,10 +81,11 @@ interface ApiService {
         @Field("timestamp") timestamp: Long
     ): TransactionResponse
 
-    // --- SALES (PENJUALAN) ---
+    // --- SALES ---
     @FormUrlEncoded
     @POST("add_sale.php")
     suspend fun addSale(
+        @Field("user_id") userId: Int,
         @Field("receipt_number") receiptNumber: String,
         @Field("product_name") productName: String,
         @Field("product_id") productId: Int,
@@ -89,14 +97,10 @@ interface ApiService {
         @Field("timestamp") timestamp: Long
     ): TransactionResponse
 
-    // Hapus transaksi
+    // Hapus semua transaksi per user
     @FormUrlEncoded
-    @POST("delete_transaction.php")
-    suspend fun deleteTransaction(
-        @Field("id") id: Int
-    ): TransactionResponse
-
-    // Hapus semua transaksi
     @POST("delete_all_transactions.php")
-    suspend fun deleteAllTransactions(): TransactionResponse
+    suspend fun deleteAllTransactions(
+        @Field("user_id") userId: Int
+    ): TransactionResponse
 }

@@ -84,7 +84,8 @@ class LoginActivity : AppCompatActivity() {
                         // Login Berhasil - Ambil data dari database
                         getSharedPreferences("kasku_prefs", MODE_PRIVATE)
                             .edit()
-                            .putString("username", user)
+                            .putString("username", body.username ?: user)
+                            .putInt("user_id", body.userId ?: -1)
                             .apply()
 
                         Toast.makeText(this@LoginActivity, body.message, Toast.LENGTH_SHORT).show()

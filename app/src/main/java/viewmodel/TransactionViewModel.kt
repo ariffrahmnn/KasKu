@@ -1,6 +1,7 @@
 package com.example.kasku.viewmodel
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kasku.data.entity.Product
@@ -16,11 +17,12 @@ import kotlinx.coroutines.launch
 class TransactionViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = TransactionRepository()
+    private val prefs = application.getSharedPreferences("kasku_prefs", Context.MODE_PRIVATE)
 
     private val _allTransactions = MutableStateFlow<List<Transaction>>(emptyList())
     val allTransactions: StateFlow<List<Transaction>> = _allTransactions.asStateFlow()
 
-    private val _totalIncome = MutableStateFlow<Double>(0.0)
+    private val _totalIncome = MutableStateFlow<Double>(100000.0)
     val totalIncome: StateFlow<Double> = _totalIncome.asStateFlow()
 
     private val _totalExpense = MutableStateFlow<Double>(0.0)
@@ -29,24 +31,37 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     private val _allProducts = MutableStateFlow<List<Product>>(emptyList())
     val allProducts: StateFlow<List<Product>> = _allProducts.asStateFlow()
 
+    private fun getUserId(): Int {
+        return prefs.getInt("user_id", -1)
+    }
+
     init {
-        fetchTransactions()
-        fetchProducts()
+        val userId = getUserId()
+        if (userId != -1) {
+            fetchTransactions()
+            fetchProducts()
+        }
     }
 
     fun fetchTransactions() = viewModelScope.launch {
-        val transactions = repository.getAllTransactions()
+        val userId = getUserId()
+        if (userId == -1) return@launch
+        
+        val transactions = repository.getAllTransactions(userId)
         _allTransactions.value = transactions
         calculateTotals(transactions)
     }
 
     fun fetchProducts() = viewModelScope.launch {
-        val products = repository.getAllProducts()
+        val userId = getUserId()
+        if (userId == -1) return@launch
+
+        val products = repository.getAllProducts(userId)
         _allProducts.value = products
     }
 
     private fun calculateTotals(transactions: List<Transaction>) {
-        var income = 0.0
+        var income = 100000.0 // Saldo Awal Default
         var expense = 0.0
         for (transaction in transactions) {
             if (transaction.type == "Pemasukan") {
@@ -60,8 +75,14 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun insert(transaction: Transaction, onResult: (Boolean, String) -> Unit) = viewModelScope.launch {
+        val userId = getUserId()
+        if (userId == -1) {
+            onResult(false, "Sesi berakhir, silakan login kembali")
+            return@launch
+        }
+
         try {
-            val response = repository.insert(transaction)
+            val response = repository.insert(userId, transaction)
             if (response.status == "success") {
                 fetchTransactions()
                 onResult(true, "Berhasil")
@@ -74,8 +95,11 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun insertPurchase(purchase: Purchase, onResult: (Boolean, String) -> Unit) = viewModelScope.launch {
+        val userId = getUserId()
+        if (userId == -1) return@launch
+
         try {
-            val response = repository.insertPurchase(purchase)
+            val response = repository.insertPurchase(userId, purchase)
             if (response.status == "success") {
                 fetchProducts()
                 fetchTransactions()
@@ -89,8 +113,11 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun insertSale(sale: Sale, onResult: (Boolean, String) -> Unit) = viewModelScope.launch {
+        val userId = getUserId()
+        if (userId == -1) return@launch
+
         try {
-            val response = repository.insertSale(sale)
+            val response = repository.insertSale(userId, sale)
             if (response.status == "success") {
                 fetchProducts()
                 fetchTransactions()
@@ -112,8 +139,11 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         sellingPrice: Double,
         onResult: (Boolean, String) -> Unit
     ) = viewModelScope.launch {
+        val userId = getUserId()
+        if (userId == -1) return@launch
+
         try {
-            val response = repository.addProduct(name, category, stock, unit, purchasePrice, sellingPrice)
+            val response = repository.addProduct(userId, name, category, stock, unit, purchasePrice, sellingPrice)
             if (response.status == "success") {
                 fetchProducts()
                 onResult(true, "Produk berhasil ditambahkan")
@@ -125,15 +155,11 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun delete(transaction: Transaction) = viewModelScope.launch {
-        val response = repository.delete(transaction.id)
-        if (response.status == "success") {
-            fetchTransactions()
-        }
-    }
-
     fun deleteAll() = viewModelScope.launch {
-        val response = repository.deleteAll()
+        val userId = getUserId()
+        if (userId == -1) return@launch
+
+        val response = repository.deleteAll(userId)
         if (response.status == "success") {
             fetchTransactions()
         }
